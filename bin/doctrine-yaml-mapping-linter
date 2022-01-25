@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -eu
+
+readonly ROOT_PATH="$(realpath "$(dirname "$(realpath "${0}")")/..")"
+
+source "${ROOT_PATH}"/bin/docker-interactive-parameter.inc.bash
+
+set +e
+which php > /dev/null 2>&1 && hasPhpCli=true || hasPhpCli=false
+which docker > /dev/null 2>&1 && hasDocker=true || hasDocker=false
+set -e
+
+if [ ${hasPhpCli} == true ]; then
+    readonly isRightPhpVersion=$(php -r 'echo PHP_VERSION_ID >= 70100 ? 1 : 0;')
+else
+    readonly isRightPhpVersion=0
+fi
+
+if [ ${hasPhpCli} == false ] || [ ${isRightPhpVersion} == 0 ]; then
+    if [ ${hasDocker} == false ]; then
+        printf "\e[41m You should have PHP ^7.1 || ^8.0 or Docker installed to execute this binary. \e[0m\n"
+        exit 1
+    fi
+
+    docker \
+        run \
+            --rm \
+            ${DOCKER_INTERACTIVE_PARAMETER} \
+            --tty \
+            --volume "${ROOT_PATH}":/app \
+            --user "$(id -u)":"$(id -g)" \
+            --workdir /app \
+            php:8.1.2-cli-alpine3.15 \
+            php \
+                -d error_reporting="E_ALL & ~E_DEPRECATED" \
+                bin/doctrine-yaml-mapping-linter.php \
+                "${@}"
+    exit 0
+else
+    php "${ROOT_PATH}"/bin/doctrine-yaml-mapping-linter.php "${@}"
+fi

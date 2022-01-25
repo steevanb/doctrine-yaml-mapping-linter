@@ -15,10 +15,12 @@
         }
     ],
     "require": {
-        "symfony/yaml": "^2.0||^3.0||^4.0||^5.0||^6.0"
+        "php": "^7.4 || ^8.0",
+        "symfony/yaml": "^2.0 || ^3.0 || ^4.0 || ^5.0 || ^6.0",
+        "symfony/console": "^3.2 || ^4.0 || ^5.0 || ^6.0"
     },
     "require-dev": {
-        "symfony/var-dumper": "^6.0"
+        "symfony/var-dumper": "^2.6 || ^3.0 || ^4.0 || ^5.0 || ^6.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -28,5 +30,8 @@
             "@rm-composer-lock"
         ],
         "rm-composer-lock": "rm composer.lock"
-    }
+    },
+    "bin": [
+        "bin/doctrine-yaml-mapping-linter"
+    ]
 }
