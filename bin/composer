@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -eu
+
+readonly ROOT_PATH="$(realpath "$(dirname "$(realpath "${0}")")/..")"
+
+source "${ROOT_PATH}"/bin/docker-interactive-parameter.inc.bash
+
+docker \
+    run \
+        --rm \
+        ${DOCKER_INTERACTIVE_PARAMETER} \
+        --tty \
+        --volume "${ROOT_PATH}":/app \
+        --user "$(id -u)":"$(id -g)" \
+        --workdir /app \
+        composer:2.2.4 \
+            "${@}"
