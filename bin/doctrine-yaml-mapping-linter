@@ -12,14 +12,14 @@ which docker > /dev/null 2>&1 && hasDocker=true || hasDocker=false
 set -e
 
 if [ ${hasPhpCli} == true ]; then
-    readonly isRightPhpVersion=$(php -r 'echo PHP_VERSION_ID >= 70100 ? 1 : 0;')
+    readonly isRightPhpVersion=$(php -r 'echo PHP_VERSION_ID >= 70400 ? 1 : 0;')
 else
     readonly isRightPhpVersion=0
 fi
 
 if [ ${hasPhpCli} == false ] || [ ${isRightPhpVersion} == 0 ]; then
     if [ ${hasDocker} == false ]; then
-        printf "\e[41m You should have PHP ^7.1 || ^8.0 or Docker installed to execute this binary. \e[0m\n"
+        printf "\e[41m You should have PHP ^7.4 || ^8.0 or Docker installed to execute this binary. \e[0m\n"
         exit 1
     fi
 
