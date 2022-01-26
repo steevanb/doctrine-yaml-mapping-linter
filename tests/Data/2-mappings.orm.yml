@@ -1,0 +1,4 @@
+App\Entity\Foo:
+    type: entity
+App\Entity\Bar:
+    type: entity
