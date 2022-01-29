@@ -1,0 +1,3 @@
+App\Entity\Foo:
+    type: entity
+    repositoryClass: App\Repository\Foo

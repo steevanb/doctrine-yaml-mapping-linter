@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Steevanb\DoctrineYamlMappingLinter\Linter;
+namespace Steevanb\DoctrineYamlMappingLinter\Linter\RootLinter;
+
+use Steevanb\DoctrineYamlMappingLinter\Linter\Result\Result;
 
 interface RootLinterInterface
 {

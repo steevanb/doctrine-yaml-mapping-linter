@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Steevanb\DoctrineYamlMappingLinter\Linter;
 
-use Steevanb\DoctrineYamlMappingLinter\Exception\FileNotFoundOrNotReadableException;
+use Steevanb\DoctrineYamlMappingLinter\{
+    Exception\FileNotFoundOrNotReadableException,
+    Linter\Result\Result,
+    Linter\Result\ResultCollection
+};
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -44,6 +48,8 @@ class Linter
         if (is_readable($pathname) === false) {
             throw new FileNotFoundOrNotReadableException($pathname);
         }
+
+        // Yaml::parseFile() has been added in symfony/yaml 3.4
         $data = file_get_contents($pathname);
         if (is_string($data) === false) {
             throw new FileNotFoundOrNotReadableException($pathname);
@@ -51,12 +57,12 @@ class Linter
         $mapping = Yaml::parse($data);
 
         if (is_array($mapping) === false) {
-            $return->getErrors()->add('Malformed mapping file.');
+            $return->getRootErrors()->add('Malformed mapping file: expecting an array at root.');
         } else {
             LinterFactory::getInstance()->getRootLinter()->lint($mapping, $return);
         }
 
-        $return->getErrors()->setReadOnly();
+        $return->getRootErrors()->setReadOnly();
 
         return $return;
     }

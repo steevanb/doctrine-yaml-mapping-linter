@@ -1,0 +1,3 @@
+App\Entity\Foo:
+    type: mappedSuperclass
+    repositoryClass: App\Repository\Foo

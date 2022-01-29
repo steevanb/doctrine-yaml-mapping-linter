@@ -1,2 +1,2 @@
 App\Entity\Foo:
-    type: unknown
+    type: foo
