@@ -14,7 +14,10 @@ use Symfony\Component\Console\{
 };
 use Steevanb\DoctrineYamlMappingLinter\{
     Linter\Linter,
-    Linter\ResultCollection
+    Linter\Result\EntityError,
+    Linter\Result\EntityWarning,
+    Linter\Result\Result,
+    Linter\Result\ResultCollection
 };
 
 class LintCommand extends Command
@@ -24,7 +27,7 @@ class LintCommand extends Command
         parent::__construct('lint');
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -74,22 +77,29 @@ class LintCommand extends Command
 
     protected function writeResult(ResultCollection $results, OutputInterface $output): self
     {
+        /** @var Result $result */
         foreach ($results as $result) {
             if ($result->hasErrors() || $result->hasWarnings()) {
                 $message = '<pathname> ' . $result->getFilePathname() . ' </pathname>';
-                if ($result->countErrors() > 0) {
+                if ($result->hasErrors() > 0) {
                     $message .= ' <error> ' . $result->countErrors() . ' </error>';
                 }
-                if ($result->countWarnings() > 0) {
+                if ($result->hasWarnings() > 0) {
                     $message .= ' <warning> ' . $result->countWarnings() . ' </warning>';
                 }
                 $output->writeln($message);
 
-                foreach ($result->getErrors() as $error) {
-                    $output->writeln('  <error> ERROR </error> ' . $error);
+                foreach ($result->getRootErrors() as $message) {
+                    $this->writeError($message, $output);
                 }
-                foreach ($result->getWarnings() as $warning) {
-                    $output->writeln('  <warning> WARNING </warning> ' . $warning);
+                foreach ($result->getEntityErrors() as $entityError) {
+                    $this->writeError($this->getEntityErrorMessage($entityError, $output), $output);
+                }
+                foreach ($result->getRootWarnings() as $message) {
+                    $this->writeWarning($message, $output);
+                }
+                foreach ($result->getEntityWarnings() as $entityWarning) {
+                    $this->writeWarning($this->getEntityWarningMessage($entityWarning, $output), $output);
                 }
 
                 $output->writeln('');
@@ -97,6 +107,40 @@ class LintCommand extends Command
         }
 
         return $this;
+    }
+
+    protected function writeError(string $message, OutputInterface $output): self
+    {
+        $output->writeln('  <error> ERROR </error> ' . $message);
+
+        return $this;
+    }
+
+    protected function getEntityErrorMessage(EntityError $entityError, OutputInterface $output): string
+    {
+        $prefix = $output->isVerbose()
+            ? $entityError->getEntityFqcn() . '.'
+            : null;
+
+        return (is_string($prefix) || is_string($entityError->getPath()))
+            ? '[' . $prefix . $entityError->getPath() . '] ' . $entityError->getError()
+            : $entityError->getError();
+    }
+
+    protected function writeWarning(string $message, OutputInterface $output): self
+    {
+        $output->writeln('  <warning> WARNING </warning> ' . $message);
+
+        return $this;
+    }
+
+    protected function getEntityWarningMessage(EntityWarning $entityWarning, OutputInterface $output): string
+    {
+        $prefix = $output->isVerbose()
+            ? $entityWarning->getEntityFqcn() . '.'
+            : null;
+
+        return '[' . $prefix . $entityWarning->getPath() . '] ' . $entityWarning->getWarning();
     }
 
     protected function writeSummary(ResultCollection $results, OutputInterface $output): self

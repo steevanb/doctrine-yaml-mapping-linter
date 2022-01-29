@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Steevanb\DoctrineYamlMappingLinter\Linter;
+namespace Steevanb\DoctrineYamlMappingLinter\Linter\Result;
 
 use PhpPp\Core\Component\Collection\AbstractObjectCollection;
 use PhpPp\Core\Contract\Collection\CommonObjectCollectionInterface;
@@ -79,7 +79,7 @@ class ResultCollection extends AbstractObjectCollection implements CommonObjectC
         $return = 0;
         /** @var Result $result */
         foreach ($this->toArray() as $result) {
-            $return += $result->countErrors();
+            $return += $result->getRootErrors()->count() + $result->getEntityErrors()->count();
         }
 
         return $return;
@@ -95,7 +95,7 @@ class ResultCollection extends AbstractObjectCollection implements CommonObjectC
         $return = 0;
         /** @var Result $result */
         foreach ($this->toArray() as $result) {
-            $return += $result->countWarnings();
+            $return += $result->getRootWarnings()->count() + $result->getEntityWarnings()->count();
         }
 
         return $return;
