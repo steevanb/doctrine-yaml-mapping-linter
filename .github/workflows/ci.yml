@@ -1,0 +1,56 @@
+name: CI
+on: [push]
+jobs:
+    composer-normalize:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: bin/ci/composer-normalize
+
+    composer-require-checker:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: ./.github/actions/ci-env
+            - run: bin/ci/composer-require-checker
+
+    composer-validate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: bin/ci/composer-validate
+
+    phpcs:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: bin/ci/phpcs
+
+    phpdd:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: ./.github/actions/ci-env
+            - run: bin/ci/phpdd
+
+    phpstan:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: [--php=7.4, --php=8.0, --php=8.1]
+        steps:
+            - uses: actions/checkout@v2
+            - uses: ./.github/actions/ci-env
+            - run: bin/ci/phpstan ${{ matrix.php }}
+
+    shellcheck:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: bin/ci/shellcheck
+
+    unused-scanner:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: bin/ci/unused-scanner

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -eu
+
+source "$(dirname "$(realpath "$0")")"/../global-vars.inc.bash
+
+source "${ROOT_PATH}"/bin/docker-ids-parameters.inc.bash
+source "${ROOT_PATH}"/config/docker/docker-image-prefix.inc.bash
+
+function buildDockerImage() {
+    local dockerImageName="${1}"
+    local dockerFilePath="${2}"
+
+    if [ "${refresh}" == true ]; then
+        local refreshArguments="--no-cache --pull"
+    else
+        local refreshArguments=
+    fi
+
+    DOCKER_BUILDKIT=1 \
+        docker \
+            build \
+                --file "${dockerFilePath}" \
+                --pull \
+                ${refreshArguments} \
+                --build-arg DOCKER_UID="${DOCKER_UID}" \
+                --build-arg DOCKER_GID="${DOCKER_GID}" \
+                --tag "${dockerImageName}" \
+                "${ROOT_PATH}"
+}
+
+function pushDockerImage() {
+    local dockerImageName="${1}"
+
+    echo "Push Docker image ${dockerImageName}."
+    docker push "${dockerImageName}"
+}
+
+refresh=false
+push=false
+for param in "${@}"; do
+    if [ "${param}" == "--refresh" ]; then
+        refresh=true
+    elif [ "${param}" == "--push" ]; then
+        push=true
+    fi
+done
+
+buildDockerImage "${DOCKER_IMAGE_PREFIX}:ci" "${ROOT_PATH}"/docker/ci/Dockerfile
+
+if [ "${push}" == true ]; then
+    pushDockerImage "${DOCKER_IMAGE_PREFIX}:ci"
+fi

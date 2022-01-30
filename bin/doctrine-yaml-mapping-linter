@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly ROOT_PATH="$(realpath "$(dirname "$(realpath "${0}")")/..")"
+source "$(dirname "$(realpath "$0")")"/global-vars.inc.bash
 
 source "${ROOT_PATH}"/bin/docker-interactive-parameter.inc.bash
 

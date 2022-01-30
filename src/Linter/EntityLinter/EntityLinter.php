@@ -24,7 +24,10 @@ class EntityLinter implements EntityLinterInterface
             ->lintRepositoryClass($entityFqcn, $entityMapping, $result);
     }
 
-    /** @return static */
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     protected function lintType(string $entityFqcn, array $mapping, MappingLinter $mappingLinter, Result $result): self
     {
         if ($mappingLinter->isKeyExists(TypeLinter::KEY)) {
@@ -36,7 +39,10 @@ class EntityLinter implements EntityLinterInterface
         return $this;
     }
 
-    /** @return static */
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     protected function lintRepositoryClass(string $entityFqcn, array $mapping, Result $result): self
     {
         LinterFactory::getInstance()->getRepositoryClassLinter()->lint($entityFqcn, $mapping, $result);

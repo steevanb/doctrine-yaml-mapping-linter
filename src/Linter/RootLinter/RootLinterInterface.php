@@ -8,6 +8,9 @@ use Steevanb\DoctrineYamlMappingLinter\Linter\Result\Result;
 
 interface RootLinterInterface
 {
-    /** @return static */
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     public function lint(array $mapping, Result $result): self;
 }

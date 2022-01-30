@@ -11,7 +11,10 @@ class RepositoryClassLinter implements EntityLinterInterface
 {
     public const KEY = 'repositoryClass';
 
-    /** @return static */
+    /**
+     * @param array<mixed> $entityMapping
+     * @return static
+     */
     public function lint(string $entityFqcn, array $entityMapping, Result $result): EntityLinterInterface
     {
         $mappingLinter = new MappingLinter(
@@ -30,7 +33,7 @@ class RepositoryClassLinter implements EntityLinterInterface
             } else {
                 $mappingLinter->addShouldBeOfTypeError($allowedTypes);
             }
-        } else if (array_key_exists(static::KEY, $entityMapping)) {
+        } elseif (array_key_exists(static::KEY, $entityMapping)) {
             $mappingLinter->addKeyShouldNotExistsError(static::KEY);
         }
 

@@ -62,7 +62,7 @@ class Linter
             LinterFactory::getInstance()->getRootLinter()->lint($mapping, $return);
         }
 
-        $return->getRootErrors()->setReadOnly();
+        $return->getRootErrors()->setReadOnly(true);
 
         return $return;
     }

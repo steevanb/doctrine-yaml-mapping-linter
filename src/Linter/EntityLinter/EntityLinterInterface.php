@@ -8,6 +8,9 @@ use Steevanb\DoctrineYamlMappingLinter\Linter\Result\Result;
 
 interface EntityLinterInterface
 {
-    /** @return static */
+    /**
+     * @param array<mixed> $entityMapping
+     * @return static
+     */
     public function lint(string $entityFqcn, array $entityMapping, Result $result): self;
 }

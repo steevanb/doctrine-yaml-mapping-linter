@@ -89,15 +89,22 @@ class LintCommand extends Command
                 }
                 $output->writeln($message);
 
-                foreach ($result->getRootErrors() as $message) {
-                    $this->writeError($message, $output);
+                /** @var string $rootError */
+                foreach ($result->getRootErrors() as $rootError) {
+                    $this->writeError($rootError, $output);
                 }
+
+                /** @var EntityError $entityError */
                 foreach ($result->getEntityErrors() as $entityError) {
                     $this->writeError($this->getEntityErrorMessage($entityError, $output), $output);
                 }
-                foreach ($result->getRootWarnings() as $message) {
-                    $this->writeWarning($message, $output);
+
+                /** @var string $rootWarning */
+                foreach ($result->getRootWarnings() as $rootWarning) {
+                    $this->writeWarning($rootWarning, $output);
                 }
+
+                /** @var EntityWarning $entityWarning */
                 foreach ($result->getEntityWarnings() as $entityWarning) {
                     $this->writeWarning($this->getEntityWarningMessage($entityWarning, $output), $output);
                 }
