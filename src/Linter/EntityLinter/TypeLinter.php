@@ -17,7 +17,10 @@ class TypeLinter implements EntityLinterInterface
 
     public const VALUE_EMBEDDABLE = 'embeddable';
 
-    /** @return static */
+    /**
+     * @param array<mixed> $entityMapping
+     * @return static
+     */
     public function lint(string $entityFqcn, array $entityMapping, Result $result): EntityLinterInterface
     {
         $mappingLinter = new MappingLinter($entityFqcn, $entityMapping[static::KEY] ?? null, static::KEY, $result);

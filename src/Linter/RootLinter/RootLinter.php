@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Steevanb\DoctrineYamlMappingLinter\Linter\RootLinter;
 
-use Steevanb\DoctrineYamlMappingLinter\Linter\LinterFactory;
-use Steevanb\DoctrineYamlMappingLinter\Linter\Result\Result;
+use Steevanb\DoctrineYamlMappingLinter\{
+    Linter\LinterFactory,
+    Linter\Result\Result
+};
 
 class RootLinter implements RootLinterInterface
 {
@@ -18,7 +20,10 @@ class RootLinter implements RootLinterInterface
             ->lintEntities($mapping, $result);
     }
 
-    /** @return static */
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     protected function lintMappingCount(array $mapping, Result $result): self
     {
         if (count($mapping) === 0) {
@@ -30,6 +35,10 @@ class RootLinter implements RootLinterInterface
         return $this;
     }
 
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     protected function lintEntitiesExists(array $mapping, Result $result): self
     {
         foreach (array_keys($mapping) as $entityFqcn) {
@@ -41,6 +50,10 @@ class RootLinter implements RootLinterInterface
         return $this;
     }
 
+    /**
+     * @param array<mixed> $mapping
+     * @return static
+     */
     protected function lintEntities(array $mapping, Result $result): self
     {
         $entityLinter = LinterFactory::getInstance()->getEntityLinter();

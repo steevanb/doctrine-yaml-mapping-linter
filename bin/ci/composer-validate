@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -eu
+
+source "$(dirname "$(realpath "$0")")"/../global-vars.inc.bash
+
+BIN_SUBDIRECTORY=ci/ \
+    source "${ROOT_PATH}"/bin/dockerise.inc.bash
+
+composer validate --ansi --strict

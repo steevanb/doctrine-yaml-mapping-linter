@@ -58,7 +58,10 @@ class MappingLinter
     {
         $return = false;
         foreach ($types as $type) {
-            if (call_user_func('is_' . $type, $this->mapping)) {
+            /** @var callable-string $callable */
+            $callable = 'is_' . $type;
+            $isAllowedType = call_user_func($callable, $this->mapping);
+            if (is_bool($isAllowedType) && $isAllowedType) {
                 $return = true;
                 break;
             }
